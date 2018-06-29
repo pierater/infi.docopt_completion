@@ -69,12 +69,12 @@ def get_options_descriptions(doc):
             yield s, sanitize_line(description)
 
 
-def parse_params(cmd):
+def parse_params(cmd, given_usage=None):
     # This creates a parameter tree (CommandParams object) for the target docopt tool.
     # Also returns a second parameter, a dict of:
     #   option->option-help-string
     from docopt import parse_defaults, parse_pattern, formal_usage, printable_usage
-    usage = get_usage(cmd)
+    usage = get_usage(cmd) if given_usage is None else given_usage
     options = parse_defaults(usage)
     pattern = parse_pattern(formal_usage(printable_usage(usage)), options)
     param_tree = CommandParams()
@@ -126,7 +126,8 @@ class CompletionGenerator(object):
         try:
             with open(file_path, "w") as fd:
                 fd.write(completion_file_content)
-        except IOError:
+        except IOError as e:
+            print(e)
             print("Failed to write {file_path}".format(file_path=file_path))
             return
         print("Completion file written to {file_path}".format(file_path=file_path))

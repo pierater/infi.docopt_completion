@@ -1,6 +1,6 @@
 import os
 import glob
-from .common import CompletionGenerator
+from common import CompletionGenerator
 
 # We fill the file template with the command name and the different sections
 # generated from the templates below.
@@ -104,11 +104,14 @@ class ZshCompletion(CompletionGenerator):
     # The completion paths defined here (the base class) are used if manual file generation is specified.
     # the paths are redefined in subclasses for automatic generation
 
-    def get_completion_path(self):
+    def get_completion_path(self, full_path=None):
         return "."
 
     def get_completion_filepath(self, cmd):
-        return os.path.join(self.get_completion_path(), "_{0}".format(cmd))
+        if os.path.exists(cmd):
+            return os.path.join(self.get_completion_path(cmd), "_{0}".format(os.path.basename(cmd)))
+        else:
+            return os.path.join(self.get_completion_path(), "_{0}".format(cmd))
 
     def create_opt_menu(self, opts, option_help):
         if not opts:

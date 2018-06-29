@@ -1,4 +1,4 @@
-from .common import CompletionGenerator
+from common import CompletionGenerator
 import os
 import string
 
@@ -31,12 +31,11 @@ class BashCompletion(CompletionGenerator):
     def get_name(self):
         return "BASH with bash-completion"
 
-    def get_completion_path(self):
+    def get_completion_path(self, full_path=None):
         return "/etc/bash_completion.d"
 
     def get_completion_filepath(self, cmd):
-        completion_path = self.get_completion_path()
-        return os.path.join(completion_path, "{0}.sh".format(cmd))
+        return os.path.join(self.get_completion_path(), "{0}.sh".format(cmd))
 
     def create_subcommand_switch(self, cmd_name, level_num, subcommands, opts):
         if len(subcommands) == 0:
